@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Complete Archive - Twenty-Something Year Old Journalist{% endblock %}
+
+{% block content %}
+<div class="category-container">
+    <h1 class="page-title">The Complete Archive</h1>
+    <p class="page-subheader">The complete archive. Every word I've ever written. Feel free to close your eyes, scroll, and click.</p>
+    
+    {% if articles %}
+        <div class="articles-list">
+            {% for article in articles %}
+            <div class="article-preview-row">
+                <div class="preview-image-container">
+                    <img src="{{ article['cover_image_filename'] | cover_image_url }}" 
+                         alt="{{ article['title'] }}" class="preview-image">
+                </div>
+                <div class="preview-text-container">
+                    <h2 class="preview-row-title">{{ article['title'] }}</h2>
+                    <p class="preview-row-meta">{{ article['category'] }} • {{ article['published_date'] }}</p>
+                    <p class="preview-row-excerpt">{{ article['content_html'] | striptags | truncate(200) }}</p>
+                    <a href="{{ url_for('article_detail', slug=article['slug']) }}" class="continue-reading">continue reading →</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="no-articles">No articles found yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
