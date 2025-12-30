@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Subscribe - Twenty-Something Year Old Journalist{% endblock %}
+
+{% block content %}
+<div class="subscribe-container">
+    <h1 class="page-title">Subscribe</h1>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    {% if subscribed %}
+        <div class="subscribe-message">
+            {% if existing %}
+                <p class="subscribe-success">You're already subscribed!</p>
+                <p>Thank you for your continued interest in our content.</p>
+            {% else %}
+                <p class="subscribe-success">Thanks for subscribing!</p>
+                <p>You'll receive updates about new articles and content.</p>
+            {% endif %}
+            <a href="{{ url_for('home') }}" class="btn-primary" style="margin-top: 1rem; display: inline-block;">Back to Home</a>
+        </div>
+    {% else %}
+        <div class="subscribe-form-container">
+            <p class="subscribe-description">Stay updated with the latest articles and content. Enter your information below to subscribe.</p>
+            
+            <form method="POST" class="subscribe-form">
+                <div class="form-group">
+                    <label for="name">Name (optional)</label>
+                    <input type="text" id="name" name="name" placeholder="Your name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                </div>
+                <button type="submit" class="btn-primary">Subscribe</button>
+            </form>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

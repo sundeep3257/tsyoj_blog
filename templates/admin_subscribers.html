@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Subscribers - Admin{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <h1>Subscribers</h1>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn-secondary">Back to Dashboard</a>
+    </div>
+    
+    <div class="admin-articles-list">
+        <h2>Subscriber List ({{ subscribers|length }} total)</h2>
+        {% if subscribers %}
+            <table class="articles-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Subscribed Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subscriber in subscribers %}
+                    <tr>
+                        <td>{{ subscriber['name'] or '(No name provided)' }}</td>
+                        <td>{{ subscriber['email'] }}</td>
+                        <td>{{ subscriber['created_at'][:10] if subscriber['created_at'] else 'N/A' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No subscribers yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article['title'] }} - Twenty-Something Year Old Journalist{% endblock %}
+
+{% block content %}
+<div class="article-container" data-article-id="{{ article['id'] }}">
+    <article class="article-detail">
+        <div class="article-header">
+            <h1 class="article-title">{{ article['title'] }}</h1>
+            <div class="article-meta">
+                <span class="article-author">By {{ article['author_name'] }}</span>
+                <span class="article-date">{{ article['published_date'] }}</span>
+                <span class="article-category">{{ article['category'] }}</span>
+            </div>
+        </div>
+        
+        <div class="article-cover">
+            <img src="{{ article['cover_image_filename'] | cover_image_url }}" 
+                 alt="{{ article['title'] }}" class="article-cover-image">
+        </div>
+        
+        <div class="article-content">
+            {{ article['content_html'] | safe }}
+        </div>
+    </article>
+    
+    <!-- Likes and Comments Section -->
+    <div class="article-interactions">
+        <!-- Like and Subscribe Section -->
+        <div class="like-section">
+            <button id="likeBtn" class="like-btn {% if has_liked %}liked{% endif %}" data-article-slug="{{ article['slug'] }}">
+                <span class="like-icon">{% if has_liked %}♥{% else %}♡{% endif %}</span>
+                <span class="like-text">{% if has_liked %}Liked{% else %}Like{% endif %}</span>
+                <span class="like-count" id="likeCount">{{ like_count }}</span>
+            </button>
+            <a href="{{ url_for('subscribe') }}" class="subscribe-btn-inline">Subscribe</a>
+        </div>
+        
+        <!-- Comments Section -->
+        <div class="comments-section">
+            <h2 class="comments-title">Comments ({{ comments|length }})</h2>
+            
+            <!-- Comment Form -->
+            <form class="comment-form" method="POST" action="{{ url_for('post_comment', slug=article['slug']) }}">
+                <div class="form-group">
+                    <label for="display_name">Name (optional)</label>
+                    <input type="text" id="display_name" name="display_name" maxlength="40" placeholder="Your name">
+                </div>
+                <div class="form-group">
+                    <label for="content">Comment *</label>
+                    <textarea id="content" name="content" rows="4" required maxlength="2000" placeholder="Write your comment here..."></textarea>
+                    <small>Maximum 2000 characters</small>
+                </div>
+                <!-- Honeypot field -->
+                <input type="text" name="website" style="display: none;" tabindex="-1" autocomplete="off">
+                <button type="submit" class="btn-primary">Post Comment</button>
+            </form>
+            
+            <!-- Comments List -->
+            <div class="comments-list">
+                {% if comments %}
+                    {% for comment in comments %}
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <span class="comment-author">{{ comment['display_name'] }}</span>
+                            <span class="comment-date">{{ comment['created_at'][:10] }}</span>
+                        </div>
+                        <div class="comment-content">{{ comment['content'] }}</div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="no-comments">No comments yet. Be the first to comment!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/article-interactions.js') }}"></script>
+{% endblock %}
+

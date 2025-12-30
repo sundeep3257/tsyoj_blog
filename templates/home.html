@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Twenty-Something Year Old Journalist{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <div class="logo-section">
+        <p class="site-description">Welcome to the Twenty-Something Year Old Journalist; formerly known as the Middle School Journalist.</p>
+        <div class="homepage-nav-buttons">
+            <a href="{{ url_for('archive') }}" class="homepage-nav-btn">The Complete Archive</a>
+            <a href="{{ url_for('songbird_magazine') }}" class="homepage-nav-btn">Songbird Magazine</a>
+            <a href="{{ url_for('angsty_entries') }}" class="homepage-nav-btn">Angsty Entries</a>
+            <a href="{{ url_for('quick_reads') }}" class="homepage-nav-btn">Quick Reads</a>
+            <a href="{{ url_for('about') }}" class="homepage-nav-btn">About the Author</a>
+        </div>
+        <div class="subscribe-section">
+            <a href="{{ url_for('subscribe') }}" class="subscribe-btn">Subscribe</a>
+        </div>
+    </div>
+
+    <div class="latest-articles-section">
+        <h2 class="section-title">Latest Articles</h2>
+        <div class="carousel-container">
+            <div class="carousel-wrapper">
+                <div class="carousel" id="articleCarousel">
+                    {% for article in articles %}
+                    <div class="carousel-item">
+                        <div class="article-preview-card">
+                            <img src="{{ article['cover_image_filename'] | cover_image_url }}" 
+                                 alt="{{ article['title'] }}" class="preview-cover">
+                            <div class="preview-content">
+                                <div class="card-meta">
+                                    <h3 class="preview-title">{{ article['title'] }}</h3>
+                                    <p class="preview-date">{{ article['published_date'] }}</p>
+                                </div>
+                                <p class="preview-excerpt card-excerpt">{{ article | safe_get('short_summary', 'Short summary of the article will go here eventually') }}</p>
+                                <div class="card-meta">
+                                    <a href="{{ url_for('article_detail', slug=article['slug']) }}" class="continue-reading">continue reading →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <button class="carousel-btn prev" id="prevBtn" aria-label="Previous">‹</button>
+            <button class="carousel-btn next" id="nextBtn" aria-label="Next">›</button>
+        </div>
+        <div class="carousel-indicators" id="carouselIndicators"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/carousel.js') }}"></script>
+{% endblock %}
+
